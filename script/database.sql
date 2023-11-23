@@ -43,22 +43,45 @@ CREATE TABLE detalhesdacompra (
                                   preco_unitario numeric(10, 2)
 );
 
--- Inserção de dados de exemplo em PostgreSQL
-INSERT INTO usuarios (nome) VALUES ('João');
-INSERT INTO usuarios (nome) VALUES ('Lucas');
-INSERT INTO usuarios (nome) VALUES ('Guilherme');
-INSERT INTO usuarios (nome) VALUES ('Anderson');
+-- Adicionando campo utilizado na tabela detalhes de compra para controle
+ALTER TABLE detalhesdacompra ADD COLUMN utilizado BOOLEAN DEFAULT FALSE;
 
-INSERT INTO cartoesdeservicos (id_usuario) VALUES (1);
-INSERT INTO cartoesdeservicos (id_usuario) VALUES (2);
-INSERT INTO cartoesdeservicos (id_usuario) VALUES (3);
-INSERT INTO cartoesdeservicos (id_usuario) VALUES (4);
 
-INSERT INTO servicos (nome_do_servico, preco) VALUES ('Corte de Cabelo', 50.00);
-INSERT INTO servicos (nome_do_servico, preco) VALUES ('Corte de Barba', 40.00);
 
-INSERT INTO kitsdeservicos (nome_do_kit, preco) VALUES ('Corte de cabelo + Corte de Barba', 70.00);
-INSERT INTO kitsdeservicos (nome_do_kit, preco) VALUES ('Pacote de Bem-Estar', 100.00);
+-- Criando tabela de recompensas
+CREATE TABLE recompensas (
+                             id serial PRIMARY KEY,
+                             descricao VARCHAR(255),
+                             ativa BOOLEAN DEFAULT TRUE,
+                             data_validade DATE
+);
+
+
+-- Utilização de recompensas
+CREATE TABLE utilizacao_recompensas (
+                                        id serial PRIMARY KEY,
+                                        id_recompensa integer REFERENCES recompensas(id),
+                                        id_cartao_de_servicos integer REFERENCES cartoesdeservicos(id),
+                                        data_utilizacao DATE,
+                                        utilizada BOOLEAN DEFAULT TRUE
+);
+
+-- -- Inserção de dados de exemplo em PostgreSQL
+-- INSERT INTO usuarios (nome) VALUES ('João');
+-- INSERT INTO usuarios (nome) VALUES ('Lucas');
+-- INSERT INTO usuarios (nome) VALUES ('Guilherme');
+-- INSERT INTO usuarios (nome) VALUES ('Anderson');
+--
+-- INSERT INTO cartoesdeservicos (id_usuario) VALUES (1);
+-- INSERT INTO cartoesdeservicos (id_usuario) VALUES (2);
+-- INSERT INTO cartoesdeservicos (id_usuario) VALUES (3);
+-- INSERT INTO cartoesdeservicos (id_usuario) VALUES (4);
+--
+-- INSERT INTO servicos (nome_do_servico, preco) VALUES ('Corte de Cabelo', 50.00);
+-- INSERT INTO servicos (nome_do_servico, preco) VALUES ('Corte de Barba', 40.00);
+--
+-- INSERT INTO kitsdeservicos (nome_do_kit, preco) VALUES ('Corte de cabelo + Corte de Barba', 70.00);
+-- INSERT INTO kitsdeservicos (nome_do_kit, preco) VALUES ('Pacote de Bem-Estar', 100.00);
 
 -- INSERT INTO comprasdeservicos (id_usuario, id_cartao_de_servicos, data_da_compra, valor_total) VALUES (1, 1, '2023-11-01', 50.00);
 -- INSERT INTO comprasdeservicos (id_usuario, id_cartao_de_servicos, data_da_compra, valor_total) VALUES (2, 2, '2023-11-02', 40.00);
