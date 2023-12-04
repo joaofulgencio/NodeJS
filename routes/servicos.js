@@ -40,4 +40,17 @@ router.post('/comprar', async (req, res, next) => {
     }
 })
 
+router.patch('/utilizar/:id_usuario/:id_compra', async (req, res, next) => {
+    try {
+        let servicoUtilizado = await req.container.utilizarServicoUseCase.execute(req.params.id_usuario, req.params.id_compra)
+        if (servicoUtilizado.error) {
+           return res.status(422).json(servicoUtilizado)
+        }
+       return res.status(200).json(servicoUtilizado)
+    } catch (error) {
+        console.error("Erro ao realizar tentativa de compra: ", error);
+        res.status(500).json({error: "Erro ao realizar tentativa de compra"})
+    }
+})
+
 module.exports = router;

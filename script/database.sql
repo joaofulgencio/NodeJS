@@ -52,8 +52,9 @@ ALTER TABLE detalhesdacompra ADD COLUMN utilizado BOOLEAN DEFAULT FALSE;
 CREATE TABLE recompensas (
                              id serial PRIMARY KEY,
                              descricao VARCHAR(255),
-                             ativa BOOLEAN DEFAULT TRUE,
-                             data_validade DATE
+                             id_servico integer REFERENCES servicos(id),
+                             id_kit integer REFERENCES kitsdeservicos(id),
+                             ativa BOOLEAN DEFAULT TRUE
 );
 
 

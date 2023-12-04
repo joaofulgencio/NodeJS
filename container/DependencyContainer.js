@@ -6,6 +6,7 @@ var CartaoDeServicoRepository = require('../repositories/CartaoDeServicoReposito
 var KitDeServicoRepository = require('../repositories/KitDeServicoRepository')
 var CompraDeServicoRepository = require('../repositories/CompraDeServicoRepository')
 var DetalheDaCompraRepository = require('../repositories/DetalheDaCompraRepository')
+var RecompensaRepository = require('../repositories/RecompensaRepository')
 var GerarCartaoDeServicoUseCase = require('../usecases/GerarCartaoDeServicoUseCase')
 var CompraDeServicoUseCase = require('../usecases/CompraDeServicoUseCase')
 var CriarServicoUseCase = require('../usecases/CriarServicoUseCase')
@@ -14,6 +15,9 @@ var CompraDeKitDeServicoUseCase = require('../usecases/CompraDeKitDeServicoUseCa
 var ListarTodosOsServicosUseCase = require('../usecases/ListarTodosOsServicosUseCase')
 var ListarTodosKitsDeServicosUseCase = require('../usecases/ListarTodosOsKitsDeServicosUseCase')
 var ListarTodosCartoesDoUsuarioUseCase= require('../usecases/ListarTodosCartoesDoUsuario')
+var UtilizarServicoUseCase = require('../usecases/UtilizarServicoUseCase')
+var ListarRecompensasDoUsuarioUseCase = require('../usecases/ListarRecompensasDoUsuario')
+var UtilizarRecompensaUseCase = require('../usecases/UtilizarRecompensa')
 class DependencyContainer {
     constructor() {
         this.databaseConnection = new DatabaseConnection()
@@ -24,6 +28,7 @@ class DependencyContainer {
         this.kitDeServicosRepository = new KitDeServicoRepository(this.databaseService);
         this.compraDeServicoRepository = new CompraDeServicoRepository(this.databaseService);
         this.detalheDaCompraRepository = new DetalheDaCompraRepository(this.databaseService);
+        this.recompensaRepository = new RecompensaRepository(this.databaseService);
         this.gerarCartaoDeServicoUseCase = new GerarCartaoDeServicoUseCase(this.cartaoDeServicosRepository)
         this.compraDeServicoUseCase = new CompraDeServicoUseCase(this.compraDeServicoRepository, this.detalheDaCompraRepository,
             this.cartaoDeServicosRepository)
@@ -34,6 +39,9 @@ class DependencyContainer {
         this.listarTodosOsServicosUseCase = new ListarTodosOsServicosUseCase(this.servicoRepository)
         this.listarTodosKitsDeServicosUseCase = new ListarTodosKitsDeServicosUseCase(this.kitDeServicosRepository)
         this.listarTodosCartoesDoUsuarioUseCase = new ListarTodosCartoesDoUsuarioUseCase(this.cartaoDeServicosRepository)
+        this.utilizarServicoUseCase = new UtilizarServicoUseCase(this.detalheDaCompraRepository)
+        this.listarRecompensasDoUsuarioUseCase = new ListarRecompensasDoUsuarioUseCase(this.recompensaRepository)
+        this.utilizarRecompensaUseCase = new UtilizarRecompensaUseCase(this.recompensaRepository)
     }
 
     async initialize() {
