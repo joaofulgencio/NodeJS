@@ -7,6 +7,9 @@ var usersRouter = require('./routes/users');
 var cartoesRouter = require('./routes/cartoes');
 var servicosRouter = require('./routes/servicos');
 var kitsRouter = require('./routes/kits');
+var comprasRouter = require('./routes/compras');
+var recompensasRouter = require('./routes/recompensa');
+var adminRouter = require('./routes/admin');
 
 const DependencyContainer = require('./container/DependencyContainer')
 
@@ -34,6 +37,9 @@ async function initializeApp() {
     app.use('/cartoes', cartoesRouter)
     app.use('/servicos', servicosRouter)
     app.use('/kits', kitsRouter)
+    app.use('/compras', comprasRouter)
+    app.use('/recompensas', recompensasRouter)
+    app.use('/admin', adminRouter)
 
     const port = process.env.PORT || 3000;
     app.listen(port, () => {

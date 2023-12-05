@@ -33,21 +33,19 @@ class DetalheDaCompraRepository {
                 WHERE id_compra = $1 AND utilizado = true;
             `;
             const params = [idCompra];
-            const result = await this.databaseService.query(sql, params);
-            return parseInt(result.rows[0].count, 10);
+            const result = await this.databaseService.execute(sql, params);
+            return parseInt(result[0].count, 10);
         } catch (error) {
             console.error('Erro ao contar serviços utilizados:', error);
             throw error;
         }
     }
 
-    //Can i refactor the method below ?
-
     async utilizarTodosServicosDaCompra(idUsuario, idCompra) {
         try {
             const sql = `UPDATE detalhesdacompra SET utilizado = true WHERE id_compra = $1 AND utilizado = false`;
             const params = [idCompra];
-            const result = await this.databaseService.execute(sql, params);
+            const result = await this.databaseService.executeUpdate(sql, params);
             if (result.rowCount === 0) {
                 throw new Error('Nenhum serviço foi atualizado, verifique se o id da compra está correto e se os serviços já não foram utilizados.');
             }
@@ -58,7 +56,21 @@ class DetalheDaCompraRepository {
             return { sucesso: true, mensagem: "Todos os serviços da compra foram marcados como utilizados." };
         } catch (error) {
             console.error('Erro ao utilizar todos os serviços da compra:', error);
-            throw error; // Repassar o erro para o manipulador de erros do Express ou outro middleware de erro.
+            throw error;
+        }
+    }
+    async buscarDetalhesDaCompra(idCompra) {
+        try {
+            const sql = `
+                SELECT * FROM detalhesdacompra
+                WHERE id_compra = $1;
+            `;
+            const params = [idCompra];
+            const result = await this.databaseService.execute(sql, params);
+            return result;
+        } catch (error) {
+            console.error('Erro ao listar detalhes da compra:', error);
+            throw error;
         }
     }
 

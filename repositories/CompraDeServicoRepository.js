@@ -14,6 +14,17 @@ class CompraDeServicoRepository {
         }
     }
 
+    async buscarCompraPorUsuario(idUsuario) {
+        try {
+            const sql = `SELECT * FROM comprasdeservicos WHERE id_usuario = $1`;
+            const params = [idUsuario];
+            const result = await this.databaseService.execute(sql, params);
+            return result;
+        } catch (error) {
+            console.error('Erro ao buscar compra de serviço:', error);
+        }
+    }
+
 
 }
 

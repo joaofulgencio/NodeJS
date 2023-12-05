@@ -3,8 +3,8 @@ class UtilizarServicoUseCase {
         this.detalheDaCompraRepository = detalheDaCompraRepository;
     }
 
-    async execute(idUsuario, idDetalheDaCompra) {
-        return await this.detalheDaCompraRepository.utilizarTodosServicosDaCompra(idUsuario, idDetalheDaCompra);
+    async execute(idUsuario, idCompra) {
+        return await this.detalheDaCompraRepository.utilizarTodosServicosDaCompra(idUsuario, idCompra);
     }
 }
 

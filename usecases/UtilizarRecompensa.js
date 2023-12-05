@@ -3,8 +3,8 @@ class UtilizarRecompensa {
         this.recompensaRepository = recompensaRepository
     }
 
-    async execute(idRecompensa) {
-        return await this.recompensaRepository.utilizarRecompensa(idRecompensa);
+    async execute(idRecompensa, idCartaoDeServicos, idKit) {
+        return await this.recompensaRepository.registrarUtilizacaoDeRecompensa(idRecompensa, idCartaoDeServicos, idKit);
     }
 }
 

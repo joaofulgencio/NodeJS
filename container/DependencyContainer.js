@@ -18,6 +18,7 @@ var ListarTodosCartoesDoUsuarioUseCase= require('../usecases/ListarTodosCartoesD
 var UtilizarServicoUseCase = require('../usecases/UtilizarServicoUseCase')
 var ListarRecompensasDoUsuarioUseCase = require('../usecases/ListarRecompensasDoUsuario')
 var UtilizarRecompensaUseCase = require('../usecases/UtilizarRecompensa')
+var AdminRepository = require('../repositories/AdminRepository')
 class DependencyContainer {
     constructor() {
         this.databaseConnection = new DatabaseConnection()
@@ -27,8 +28,8 @@ class DependencyContainer {
         this.servicoRepository = new ServicoRepository(this.databaseService);
         this.kitDeServicosRepository = new KitDeServicoRepository(this.databaseService);
         this.compraDeServicoRepository = new CompraDeServicoRepository(this.databaseService);
-        this.detalheDaCompraRepository = new DetalheDaCompraRepository(this.databaseService);
         this.recompensaRepository = new RecompensaRepository(this.databaseService);
+        this.detalheDaCompraRepository = new DetalheDaCompraRepository(this.databaseService, this.recompensaRepository);
         this.gerarCartaoDeServicoUseCase = new GerarCartaoDeServicoUseCase(this.cartaoDeServicosRepository)
         this.compraDeServicoUseCase = new CompraDeServicoUseCase(this.compraDeServicoRepository, this.detalheDaCompraRepository,
             this.cartaoDeServicosRepository)
@@ -42,6 +43,7 @@ class DependencyContainer {
         this.utilizarServicoUseCase = new UtilizarServicoUseCase(this.detalheDaCompraRepository)
         this.listarRecompensasDoUsuarioUseCase = new ListarRecompensasDoUsuarioUseCase(this.recompensaRepository)
         this.utilizarRecompensaUseCase = new UtilizarRecompensaUseCase(this.recompensaRepository)
+        this.adminRepository = new AdminRepository(this.databaseService)
     }
 
     async initialize() {

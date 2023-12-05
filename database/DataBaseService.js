@@ -17,6 +17,20 @@ class DatabaseService {
         }
     }
 
+    async executeUpdate(query, params = []) {
+        let connection
+        try {
+            connection = await this.connection.getConnection();
+            const result = await connection.query(query, params);
+            return result;
+        } catch (error) {
+            console.error('Erro na execução da atualização:', error);
+            return 0;
+        } finally {
+            connection.release();
+        }
+    }
+
     async executeInsert(query, params = []) {
         let connection
         try {

@@ -51,21 +51,35 @@ ALTER TABLE detalhesdacompra ADD COLUMN utilizado BOOLEAN DEFAULT FALSE;
 -- Criando tabela de recompensas
 CREATE TABLE recompensas (
                              id serial PRIMARY KEY,
+                             id_usuario integer REFERENCES usuarios(id),
                              descricao VARCHAR(255),
-                             id_servico integer REFERENCES servicos(id),
-                             id_kit integer REFERENCES kitsdeservicos(id),
                              ativa BOOLEAN DEFAULT TRUE
 );
 
 
 -- Utilização de recompensas
-CREATE TABLE utilizacao_recompensas (
+CREATE TABLE utilizacaoderecompensas (
                                         id serial PRIMARY KEY,
                                         id_recompensa integer REFERENCES recompensas(id),
-                                        id_cartao_de_servicos integer REFERENCES cartoesdeservicos(id),
+                                        id_usuario integer REFERENCES usuarios(id),
                                         data_utilizacao DATE,
                                         utilizada BOOLEAN DEFAULT TRUE
 );
+
+CREATE OR REPLACE FUNCTION desativar_recompensa()
+    RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE recompensas
+    SET ativa = FALSE
+    WHERE id = NEW.id_recompensa;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER desativar_recompensa_apos_uso
+    AFTER INSERT ON utilizacaoderecompensas
+    FOR EACH ROW
+EXECUTE FUNCTION desativar_recompensa();
 
 -- -- Inserção de dados de exemplo em PostgreSQL
 -- INSERT INTO usuarios (nome) VALUES ('João');
@@ -93,3 +107,40 @@ CREATE TABLE utilizacao_recompensas (
 -- INSERT INTO detalhesdacompra (id_compra, id_servico, quantidade, preco_unitario) VALUES (2, 2, 1, 40.00);
 -- INSERT INTO detalhesdacompra (id_compra, id_kit, quantidade, preco_unitario) VALUES (3, 1, 1, 70.00);
 -- INSERT INTO detalhesdacompra (id_compra, id_kit, quantidade, preco_unitario) VALUES (4, 2, 1, 100.00);
+
+
+SELECT servicos.nome_do_servico, COUNT(detalhesdacompra.id_servico) AS qtd_vendas
+FROM detalhesdacompra
+         JOIN servicos ON detalhesdacompra.id_servico = servicos.id
+GROUP BY servicos.nome_do_servico;
+
+
+SELECT kitsdeservicos.nome_do_kit, COUNT(detalhesdacompra.id_kit) AS qtd_vendas
+FROM detalhesdacompra
+         JOIN kitsdeservicos ON detalhesdacompra.id_kit = kitsdeservicos.id
+GROUP BY kitsdeservicos.nome_do_kit;
+
+
+SELECT servicos.nome_do_servico, COUNT(detalhesdacompra.id_servico) AS qtd_utilizados
+FROM detalhesdacompra
+         JOIN servicos ON detalhesdacompra.id_servico = servicos.id
+WHERE detalhesdacompra.utilizado = TRUE
+GROUP BY servicos.nome_do_servico;
+
+
+SELECT COUNT(*) AS qtd_recompensas
+FROM recompensas;
+
+
+SELECT servicos.nome_do_servico, COUNT(detalhesdacompra.id_servico) AS qtd_nao_utilizados
+FROM detalhesdacompra
+         JOIN servicos ON detalhesdacompra.id_servico = servicos.id
+WHERE detalhesdacompra.utilizado = FALSE
+GROUP BY servicos.nome_do_servico;
+
+
+SELECT kitsdeservicos.nome_do_kit, COUNT(detalhesdacompra.id_kit) AS qtd_nao_utilizados
+FROM detalhesdacompra
+         JOIN kitsdeservicos ON detalhesdacompra.id_kit = kitsdeservicos.id
+WHERE detalhesdacompra.utilizado = FALSE
+GROUP BY kitsdeservicos.nome_do_kit;
